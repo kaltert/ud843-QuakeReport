@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item"
     android:layout_width="match_parent"
     android:layout_height="88dp"
@@ -12,22 +13,53 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_weight="1"
-        android:text="5.1" />
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@color/colorText"
+        tools:text="5.1" />
 
-    <TextView
-        android:id="@+id/text_view_place"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="San Francisco, CA" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/text_view_time"
+        <TextView
+            android:id="@+id/text_view_ref_distanc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextLight"
+            tools:text="95km W of" />
+
+        <TextView
+            android:id="@+id/text_view_ref_place"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@color/colorText"
+            tools:text="San Francisco, CA" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginRight="16dp"
         android:layout_weight="1"
         android:gravity="end"
-        android:text="10 Jan, 2016" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text_view_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextLight"
+            tools:text="10 Jan, 2016" />
+
+        <TextView
+            android:id="@+id/text_view_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextLight"
+            tools:text="12:24 PM" />
+    </LinearLayout>
 
 </LinearLayout>

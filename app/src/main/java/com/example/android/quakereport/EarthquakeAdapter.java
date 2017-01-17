@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * This class offers views to represent earthquake objects.
@@ -50,18 +52,64 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
                 aEarthquake.getMag()
         ));
 
-        // Find the place textView
-        TextView placeTextView = (TextView) listItemView.findViewById(R.id.text_view_place);
+        // Find the reference place textView
+        TextView refPlaceTextView = (TextView) listItemView.findViewById(R.id.text_view_ref_place);
 
         // Set text to place.
-        placeTextView.setText(aEarthquake.getPlace());
+        refPlaceTextView.setText(getRplace(aEarthquake.getPlace()));
+
+        // Find the  refDistance  textView
+        TextView refDistancTextView = (TextView) listItemView.findViewById(R.id.text_view_ref_distanc);
+
+        // Set text to place.
+        refDistancTextView.setText(getRefDistanc(aEarthquake.getPlace()));
+
+
+        // Find the date textView
+        TextView dateTextView = (TextView) listItemView.findViewById(R.id.text_view_date);
+
+        // Set text to place.
+        dateTextView.setText(getDate(aEarthquake.getTime()));
 
         // Find the time textView
         TextView timeTextView = (TextView) listItemView.findViewById(R.id.text_view_time);
 
         // Set text to place.
-        timeTextView.setText(aEarthquake.getTime());
+        timeTextView.setText(getTime(aEarthquake.getTime()));
 
         return listItemView;
+    }
+
+    /**
+     * Helper medhotd to get reference place of earthquake
+     */
+    public String getRplace(String place) {
+        // delimiter index
+        int dIndex = place.indexOf("of");
+        return place.substring(dIndex + 2);
+    }
+
+    /**
+     * Helper medhod to get 'distance from' reference place
+     */
+
+    public String getRefDistanc(String place) {
+        // delimiter index
+        int dIndex = place.indexOf("of");
+        return place.substring(0, dIndex + 2);
+    }
+
+    /**
+     * Helper medhod to get date of earthquake
+     */
+    public String getDate(long time) {
+        return new SimpleDateFormat("yyyy MMM, d").format(new Date(time));
+    }
+
+    /**
+     * Helper medhod to get time of earthquake
+     */
+    public String getTime(long time) {
+        return new SimpleDateFormat("hh:mm aaa").format(new Date(time));
     }
 }

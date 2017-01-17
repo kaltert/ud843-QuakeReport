@@ -20,7 +20,7 @@ public class Earthquake {
     /**
      * time of earthquake
      */
-    private String mTime;
+    private long mTime;
 
     /**
      * Create a new Earthquake object.
@@ -29,7 +29,7 @@ public class Earthquake {
      * @param place is the place where earthquake happened.
      * @param time  is the time of earthquake.
      */
-    public Earthquake(double mag, String place, String time) {
+    public Earthquake(double mag, String place, long time) {
         mMag = mag;
         mPlace = place;
         mTime = time;
@@ -52,7 +52,7 @@ public class Earthquake {
     /**
      * get time of earthquake
      */
-    public String getTime() {
+    public long getTime() {
         return mTime;
     }
 }

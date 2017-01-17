@@ -22,4 +22,9 @@
 
     <!-- Accent color of the app -->
     <color name="colorAccent">#10CAC9</color>
+
+    <!-- Text color -->
+    <color name="colorText">#212121</color>
+    <!-- Light text color -->
+    <color name="colorTextLight">#BDBDBD</color>
 </resources>
