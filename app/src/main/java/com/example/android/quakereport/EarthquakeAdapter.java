@@ -1,13 +1,16 @@
 package com.example.android.quakereport;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +20,19 @@ import java.util.Date;
  */
 
 public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
+
+    // Magnitude levels
+    private final int MAG_ONE = 0;
+    private final int MAG_TWO = 1;
+    private final int MAG_THREE = 2;
+    private final int MAG_FOUR = 3;
+    private final int MAG_FIVE = 4;
+    private final int MAG_SIX = 5;
+    private final int MAG_SEVEN = 6;
+    private final int MAG_EIGHT = 7;
+    private final int MAG_NINE = 8;
+    private final int MAG_TEN_OR_MORE = 9;
+
 
     /**
      * Create a new EarthquakeAdapter object.
@@ -48,9 +64,20 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         TextView magTextView = (TextView) listItemView.findViewById(R.id.text_view_mag);
 
         // Set text to magnitude.
-        magTextView.setText(String.valueOf(
-                aEarthquake.getMag()
-        ));
+        magTextView.setText(formatMag(aEarthquake.getMag()));
+
+
+        // Set the proper background color on the magnitude circle.
+        // Fetch the background from the TextView, which is a GradientDrawable.
+        GradientDrawable magnitudeCircle = (GradientDrawable) magTextView.getBackground();
+
+        // Get the appropriate background color based on the current earthquake magnitude
+        int magnitudeColor = getMagnitudeColor(aEarthquake.getMag());
+
+        // Set the color on the magnitude circle
+        magnitudeCircle.setColor(magnitudeColor);
+
+
 
         // Find the reference place textView
         TextView refPlaceTextView = (TextView) listItemView.findViewById(R.id.text_view_ref_place);
@@ -75,7 +102,7 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         TextView timeTextView = (TextView) listItemView.findViewById(R.id.text_view_time);
 
         // Set text to place.
-        timeTextView.setText(getTime(aEarthquake.getTime()));
+        timeTextView.setText(formatTime(aEarthquake.getTime()));
 
         return listItemView;
     }
@@ -86,30 +113,69 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
     public String getRplace(String place) {
         // delimiter index
         int dIndex = place.indexOf("of");
-        return place.substring(dIndex + 2);
+        return (dIndex > 0 ? place.substring(dIndex + 2) : place);
     }
 
     /**
      * Helper medhod to get 'distance from' reference place
      */
 
-    public String getRefDistanc(String place) {
+    private String getRefDistanc(String place) {
         // delimiter index
         int dIndex = place.indexOf("of");
-        return place.substring(0, dIndex + 2);
+        return (dIndex > 0 ? place.substring(0, dIndex + 2) : "Near the");
     }
 
     /**
      * Helper medhod to get date of earthquake
      */
-    public String getDate(long time) {
+    private String getDate(long time) {
         return new SimpleDateFormat("yyyy MMM, d").format(new Date(time));
     }
 
     /**
-     * Helper medhod to get time of earthquake
+     * Helper medhod to format time of earthquake
      */
-    public String getTime(long time) {
+    private String formatTime(long time) {
         return new SimpleDateFormat("hh:mm aaa").format(new Date(time));
+    }
+
+    /**
+     * Helper method to format magnitude of eartquake.
+     * It shows only one digit after dot.
+     */
+    private String formatMag(double magnitude) {
+        return new DecimalFormat("0.0").format(magnitude);
+    }
+
+    /**
+     * Helper method to get the assciated color for magnitude.
+     */
+    private int getMagnitudeColor(double magnitude) {
+        // magnitude is double so get the floor
+        // for the switch to work
+        int roundLevel = (int) Math.floor(magnitude);
+        switch (roundLevel) {
+            case MAG_ONE:
+                return ContextCompat.getColor(getContext(), R.color.magnitude1);
+            case MAG_TWO:
+                return ContextCompat.getColor(getContext(), R.color.magnitude2);
+            case MAG_THREE:
+                return ContextCompat.getColor(getContext(), R.color.magnitude3);
+            case MAG_FOUR:
+                return ContextCompat.getColor(getContext(), R.color.magnitude4);
+            case MAG_FIVE:
+                return ContextCompat.getColor(getContext(), R.color.magnitude5);
+            case MAG_SIX:
+                return ContextCompat.getColor(getContext(), R.color.magnitude6);
+            case MAG_SEVEN:
+                return ContextCompat.getColor(getContext(), R.color.magnitude7);
+            case MAG_EIGHT:
+                return ContextCompat.getColor(getContext(), R.color.magnitude8);
+            case MAG_NINE:
+                return ContextCompat.getColor(getContext(), R.color.magnitude9);
+            default:
+                return ContextCompat.getColor(getContext(), R.color.magnitude10plus);
+        }
     }
 }
