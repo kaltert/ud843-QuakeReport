@@ -17,6 +17,7 @@ package com.example.android.quakereport;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -29,20 +30,48 @@ public class EarthquakeActivity extends AppCompatActivity {
 
     public static final String LOG_TAG = EarthquakeActivity.class.getName();
 
+    /**
+     * Default request for USGS, earthquakes around Kosovo.
+     */
+    private static final String DEFAULT_REQUEST = "http://earthquake.usgs.gov/fdsnws/event/1/" +
+            " query?format=geojson&starttime=10160101&endtime=20170101&minmagnitude=5" +
+            "&latitude=42.6629&longitude=21.1655" +
+            "&maxradiuskm=100";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.earthquake_activity);
 
-        // Create a fake list of earthquake locations.
-        final ArrayList<Earthquake> earthquakes = QueryUtils.extractEarthquakes();
+        // Start Task to get earthquakes from USGS
+        GetEarthquakesTask getEarthquakesTask = new GetEarthquakesTask();
+        getEarthquakesTask.execute(DEFAULT_REQUEST);
 
+    }
+
+    /**
+     * Helper method for starting a a web-browser,
+     * to display  earthquake details.
+     */
+    public void openWebPage(String url) {
+        Uri webpage = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
+    /**
+     * Helper method for updating UI with the data from USGS web-site
+     */
+    private void updateUI(final ArrayList<Earthquake> earthquakes) {
 
         // Find a reference to the {@link ListView} in the layout
         ListView earthquakeListView = (ListView) findViewById(R.id.list);
 
         // Create a new {@link ArrayAdapter} of earthquakes
         EarthquakeAdapter adapter = new EarthquakeAdapter(this, earthquakes);
+
 
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
@@ -66,14 +95,27 @@ public class EarthquakeActivity extends AppCompatActivity {
     }
 
     /**
-     * Helper method for starting a a web-browser,
-     * to display  earthquake details.
+     * Getting Earthquakes Task, consists of crating an URl, making a HTTP request
+     * getting the response and using it to make a list of earthquakes
      */
-    public void openWebPage(String url) {
-        Uri webpage = Uri.parse(url);
-        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
+    private class GetEarthquakesTask extends AsyncTask<String, Void, ArrayList<Earthquake>> {
+        @Override
+        protected ArrayList<Earthquake> doInBackground(String... strings) {
+            // List of earthquakes
+            ArrayList<Earthquake> earthquakes;
+            // Get earthquakes form USGS
+            earthquakes = QueryUtils.getEarthquakes(strings[0]);
+
+            return earthquakes;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Earthquake> earthquakes) {
+            if (earthquakes == null) {
+                return;
+            }
+            // Update user interface if there erthquakes from USGS web-site.
+            updateUI(earthquakes);
         }
     }
 }
