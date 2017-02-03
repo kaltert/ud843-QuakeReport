@@ -108,7 +108,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
      */
     @Override
     public Loader<List<Earthquake>> onCreateLoader(int id, Bundle args) {
-        return new EarthquakeLoader(EarthquakeActivity.this);
+        return new EarthquakeLoader(EarthquakeActivity.this, DEFAULT_REQUEST);
     }
 
     /**
@@ -145,8 +145,18 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
      */
     private static class EarthquakeLoader extends AsyncTaskLoader<List<Earthquake>> {
 
-        public EarthquakeLoader(Context context) {
+        private String mUrl;
+
+        public EarthquakeLoader(Context context, String url) {
             super(context);
+
+            mUrl = url;
+
+        }
+
+        @Override
+        protected void onStartLoading() {
+            forceLoad();
         }
 
         @Override
@@ -154,7 +164,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
             // List of earthquakes
             ArrayList<Earthquake> earthquakes;
             // Get earthquakes form USGS
-            earthquakes = QueryUtils.getEarthquakes(DEFAULT_REQUEST);
+            earthquakes = QueryUtils.getEarthquakes(mUrl);
 
             return earthquakes;
         }
