@@ -14,6 +14,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * This class offers views to represent earthquake objects.
@@ -38,10 +39,10 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
      * Create a new EarthquakeAdapter object.
      *
      * @param context    is the current context (i.e. Activity) that the adapter is being created in.
-     * @param earthquake is the list of Earthquakes to be displayed.
+     * @param earthquakes is the list of Earthquakes to be displayed.
      */
-    public EarthquakeAdapter(Context context, ArrayList<Earthquake> earthquake) {
-        super(context, 0, earthquake);
+    public EarthquakeAdapter(Context context, ArrayList<Earthquake> earthquakes) {
+        super(context, 0, earthquakes);
 
     }
 
@@ -105,6 +106,14 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         timeTextView.setText(formatTime(aEarthquake.getTime()));
 
         return listItemView;
+    }
+
+    /**
+     * Load earthquake list, so adapter can use it to offer views.
+     */
+    public void loadEarthquakeList(List<Earthquake> newList) {
+        addAll(newList);
+        notifyDataSetChanged();
     }
 
     /**
